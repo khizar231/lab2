@@ -1,0 +1,30 @@
+=== python lab2_percepts.py ===
+REFLEX BASELINE (always sends)
+1. percept=Percept(temperature_c=17.9, occupied=False) -> target=HEAT, command=SEND
+2. percept=Percept(temperature_c=17.9, occupied=False) -> target=HEAT, command=SEND
+3. percept=Percept(temperature_c=18.0, occupied=False) -> target=IDLE, command=SEND
+4. percept=Percept(temperature_c=26.0, occupied=False) -> target=IDLE, command=SEND
+5. percept=Percept(temperature_c=26.1, occupied=False) -> target=COOL, command=SEND
+6. percept=Percept(temperature_c=22.0, occupied=True) -> target=COMFORT, command=SEND
+7. percept=Percept(temperature_c=22.0, occupied=False) -> target=IDLE, command=SEND
+
+=== python lab2_model.py ===
+STATEFUL CONTROLLER TRACE
+Case | Previous mode | Percept | Target | Command outcome
+Repeated cold percept 1 | UNKNOWN | Percept(temperature_c=17.0, occupied=False) | HEAT | SEND
+Repeated cold percept 2 | HEAT | Percept(temperature_c=17.0, occupied=False) | HEAT | NO COMMAND
+Lower exact boundary | HEAT | Percept(temperature_c=18.0, occupied=False) | IDLE | SEND
+Upper exact boundary | IDLE | Percept(temperature_c=26.0, occupied=False) | IDLE | NO COMMAND
+Mode transition | IDLE | Percept(temperature_c=27.0, occupied=False) | COOL | SEND
+Occupied priority | COOL | Percept(temperature_c=27.0, occupied=True) | COMFORT | SEND
+Empty room | COMFORT | Percept(temperature_c=22.0, occupied=False) | IDLE | SEND
+
+=== python lab2_check.py ===
+first cold target sends: PASS
+repeated target suppressed: PASS
+18 C exact lower boundary is IDLE: PASS
+26 C exact upper boundary is IDLE: PASS
+transition to COOL sends: PASS
+occupancy overrides hot temperature: PASS
+empty room returns to IDLE: PASS
+Summary: 7/7 checks passed
